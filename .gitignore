@@ -1,3 +1,9 @@
+*.out
+.vscode/
+.vscode/settings.json
+built/**/*
+nodemon.json*
+
 # Logs
 logs
 *.log

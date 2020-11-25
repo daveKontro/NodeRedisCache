@@ -1,9 +1,9 @@
 'use strict'
 const { promisify } = require('util')
 const express = require('express')
-const fetch = require('node-fetch')
 const redis = require('redis')
-const { userNames } = require('./urls')
+const { fetchUserNames } = require('./fetchers')
+
 
 const app = express()
 
@@ -28,17 +28,6 @@ const setResponse = name => `<div><h2>${name}</h2></div>`
 const getUsers = async (req, res, next) => {
   const { phone } = req.params
 
-  const fetchRawData = async url => {
-    try {
-      console.log('fetching data...')
-
-      const response = await fetch(url)
-      return await response.json()
-    } catch (err) {
-      res.status(500)
-    }
-  }
-
   const parseRawData = (phone, rawData) => {
     const user = rawData.results.filter(user => user.phone === phone)[0]
     const name = `${user.name.title}. ${user.name.first} ${user.name.last}`
@@ -55,7 +44,7 @@ const getUsers = async (req, res, next) => {
     }
   }
 
-  const rawData = await fetchRawData(userNames)
+  const rawData = await fetchUserNames(res)
   const name = parseRawData(phone, rawData)
   await storeData(name)
 }

@@ -3,7 +3,8 @@ const { promisify } = require('util')
 const express = require('express')
 const fetch = require('node-fetch')
 const redis = require('redis')
-const { userInfo } = require('./urls')
+const { fetchUserInfo } = require('./fetchers')
+
 
 const app = express()
 
@@ -37,17 +38,6 @@ const setResponse = user => (
 const getUsers = async (req, res, next) => {
   const { phone } = req.params
 
-  const fetchRawData = async url => {
-    try {
-      console.log('fetching data...')
-
-      const response = await fetch(url)
-      return await response.json()
-    } catch (err) {
-      res.status(500)
-    }
-  }
-
   const parseRawData = (phone, rawData) => {
     const user = rawData.results.filter(user => user.phone === phone)[0]
     const name = `${user.name.title}. ${user.name.first} ${user.name.last}`
@@ -71,7 +61,7 @@ const getUsers = async (req, res, next) => {
     }
   }
 
-  const rawData = await fetchRawData(userInfo)
+  const rawData = await fetchUserInfo(res)
   const user = parseRawData(phone, rawData)
   await storeData(user)
 }

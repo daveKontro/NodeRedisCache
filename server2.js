@@ -8,7 +8,7 @@ const { userInfo } = require('./urls')
 const app = express()
 
 // NOTE: uses redis HSETNX command to 
-// cache multiple hash field value pairs...
+// cache hash field value pairs...
 // get user information by phone number
 
 // env vars

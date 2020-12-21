@@ -14,6 +14,8 @@ _intro to redis: redis-server and redis-cli_
 [list of all commands](https://redis.io/commands)
 
 - QUIT: close cli connection
+- SHUTDOWN: persists data and shuts down redis server
+  - run from cli then QUIT
 - SET: set key value
   - SET greeting "hello world"
   - SET foo:bar "baz"
